@@ -1,0 +1,13 @@
+module husdata_exporter
+
+go 1.19
+
+require (
+	github.com/VictoriaMetrics/metrics v1.23.0
+	golang.org/x/text v0.14.0
+)
+
+require (
+	github.com/valyala/fastrand v1.1.0 // indirect
+	github.com/valyala/histogram v1.2.0 // indirect
+)

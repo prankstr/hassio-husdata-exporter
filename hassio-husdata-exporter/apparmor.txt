@@ -1,0 +1,34 @@
+#include <tunables/global>
+
+profile husdata_exporter flags=(attach_disconnected,mediate_deleted) {
+  #include <abstractions/base>
+
+  file,
+  signal,
+
+  # S6-Overlay & Bashio
+  /init rix,
+  /bin/** ix,
+  /usr/bin/** ix,
+  /etc/s6/** rix,
+  /run/s6/** rwix,
+  /etc/services.d/** rwix,
+  /etc/cont-init.d/** rwix,
+  /etc/cont-finish.d/** rwix,
+  /run/** rwk,
+
+  # Bashio
+  /usr/lib/bashio/** ix,
+  /tmp/** rw,
+
+  # Execution program
+  /app/husdata_exporter cx,
+
+  profile /app/husdata_exporter flags=(attach_disconnected,mediate_deleted) {
+    #include <abstractions/base>
+
+    signal receive,
+
+    /app/husdata_exporter r,
+  }
+}
