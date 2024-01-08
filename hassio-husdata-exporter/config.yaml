@@ -3,6 +3,7 @@ description: "Husdata prometheus exporter for Home Assistant"
 version: "1.0.0"
 slug: "husdata_exporter"
 init: false
+panel_icon: mdi:chart-line
 arch:
   - aarch64
   - amd64
