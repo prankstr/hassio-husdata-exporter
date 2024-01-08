@@ -10,6 +10,7 @@ import (
 	"golang.org/x/text/message"
 )
 
+// Update is called periodically to update metrics with new values
 func Update(vpdata *models.VPData, lang language.Tag) {
 	p := message.NewPrinter(lang)
 
@@ -90,6 +91,7 @@ func Update(vpdata *models.VPData, lang language.Tag) {
 
 }
 
+// createGaugeIfNotNil creates a guage if the metric was provided from the husdata gateway
 func createGaugeIfNotNil(metricValue *int64, metricName string, labelKey string, labelValue string, lang language.Tag, printer *message.Printer, applyDivision bool) {
 	if metricValue != nil {
 		var fullMetricName string
@@ -109,6 +111,7 @@ func createGaugeIfNotNil(metricValue *int64, metricName string, labelKey string,
 	}
 }
 
+// createGaugeIfNotNil creates a counter if the metric was provided from the husdata gateway
 func createCounterIfNotNil(metricValue *int64, metricName string, labelKey string, labelValue string, lang language.Tag, printer *message.Printer, applyDivision bool) {
 	if metricValue != nil {
 		var fullMetricName string
