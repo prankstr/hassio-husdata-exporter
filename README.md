@@ -3,14 +3,14 @@
 ## Overview
 Husdata Prometheus Exporter is a Home Assistant add-on designed to integrate with Husdata gateways. It polls and exports data from Husdata gateways(H60/H66), providing the Husdata heatpump metrics in a format compatible with Prometheus enhancing your ability to monitor and analyze the performance of your heat pump. 
 
-This has been developed towards a H66 connected and a Nibe heatpump with the Styr2002 interface but a lot of the metrics should work for other heat pumps as well, I'm not sure what works and what doesn't though.
+This has been developed towards a Husdata H66 and a Nibe heatpump with the Styr2002 interface but a lot of the metrics should work for other heat pumps as well, I'm not sure what works and what doesn't though.
 
 ## Features
-- Periodic polling of data from Husdata systems.
-- Metrics exposure in Prometheus format for easy integration and monitoring.
+- Periodic polling of data from Husdata gateways.
+- Exports Husdata metrics in a prometheus format for easy integration and monitoring.
 - Customizable polling intervals.
-- Supports Swedish and English label values for sensors etc.
-- Optional external server functionality for direct add-on access.
+- Supports Swedish and English label values for sensors etc(see below).
+- Supports Home Assistant Ingress and an external server for direct access.
 
 ## Installation
 
@@ -20,11 +20,11 @@ This has been developed towards a H66 connected and a Nibe heatpump with the Sty
 
 ### Steps
 1. **Add Repository to Home Assistant:**
-   [![Add repository on my Home Assistant](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2FPrankstr%2Fhassio-husdata-exporter) 
+   [![Add repository to my Home Assistant](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2FPrankstr%2Fhassio-husdata-exporter) 
 
     Or manually:
    - Navigate to the Add-on Store in your Home Assistant UI: `Settings` -> `Add-ons` -> `Add-on Store`.
-   - Click the 3-dots in the upper right corner, select `Repositories`, and paste in this URL: [https://github.com/Prankstr/hassio-husdata-exporter](https://github.com/Prankstr/hassio-husdata-exporter)
+   - Click the 3-dots in the upper right corner, select `Repositories`, and paste in this URL: [https://github.com/Prankstr/hassio-husdata-exporter](https://github.com/prankstr/hassio-husdata-exporter)
 
 2. **Install Husdata Exporter:**
    - Refresh the page
@@ -41,7 +41,7 @@ Configure the add-on through the Home Assistant UI with the following options:
 ## Usage
 Once the Husdata Exporter add-on is configured and running:
 - The exporter will start polling data from your Husdata gateway immediately.
-- For scraping within Home Assistant: Configure your monitoring tool to scrape metrics from `http://addon_<commit_id>_husdata_exporter:8099/metrics`.
+- For scraping within Home Assistant: Configure your monitoring tool to scrape metrics from `http://d5f5b367-husdata-exporter:8099/metrics`.
 - For external scraping: Enable the external server in settings and configure your tool to scrape from `http://<your-server-ip-or-hostname>:9101/metrics`.
 
 ## Available Metrics
@@ -90,6 +90,12 @@ Once the Husdata Exporter add-on is configured and running:
 | `2A20`    | `heatpump_alarm`                                  | Alarm                    | Alarm                    |
 | `22F2`    | `heatpump_alarm_reset`                            | Alarm Reset              | Alarm Reset              |
 | `CFAA`    | `heatpump_sensor_power_watt`                      | Effekt                   | Power Consumption        |
+
+## Dashboard
+
+I've included my `dashboard.json` for Grafana which is pre-configured in Swedish and can serve as a base for creating your custom dashboard to monitor your heatpump.
+
+![Grafana Dashboard Preview](images/dashboard.png "Grafana Dashboard")
 
 ## License
 This project is licensed under the [MIT License](LICENSE).

@@ -2,17 +2,15 @@
 Configure the add-on through the Home Assistant UI with the following options:
 - `husdata_hostname` (required): Hostname or IP address of your Husdata gateway.
 - `language` (optional): Language for metrics (options: "Swedish", "English"; default: "Swedish").
-- `external_server` (optional): Enable/disable direct access to the add-on without ingress (default: false).
+- `external_server` (optional): Enable/disable direct access to the add-on (default: false).
 - `poll_interval` (optional): Time interval (in seconds) between data polls (default: 15).
 - `log_level` (optional): Set the logging level (options: "Info", "Debug", "Warn", "Error"; default: "Info").
 
 ## Usage
 Once the Husdata Exporter add-on is configured and running:
 - The exporter will start polling data from your Husdata gateway immediately.
-- For scraping within Home Assistant: Configure your monitoring tool to scrape metrics from `http://addon_<commit_id>_husdata_exporter:8099/metrics`.
+- For scraping within Home Assistant: Configure your monitoring tool to scrape metrics from `http://d5f5b367-husdata-exporter:8099/metrics`.
 - For external scraping: Enable the external server in settings and configure your tool to scrape from `http://<your-server-ip-or-hostname>:9101/metrics`.
-
-## Available Metrics
 
 ## Available Metrics
 
@@ -60,3 +58,9 @@ Once the Husdata Exporter add-on is configured and running:
 | `2A20`    | `heatpump_alarm`                                  | Alarm                    | Alarm                    |
 | `22F2`    | `heatpump_alarm_reset`                            | Alarm Reset              | Alarm Reset              |
 | `CFAA`    | `heatpump_sensor_power_watt`                      | Effekt                   | Power Consumption        |
+
+## Dashboard
+
+There is a `dashboard.json` for Grafana in the git repo which is a pre-configured dashboard in Swedish, it can serve as a base for creating your custom dashboard to monitor your heatpump.
+
+![Grafana Dashboard Preview](../images/dashboard.png "Grafana Dashboard")
