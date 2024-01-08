@@ -47,6 +47,13 @@ var (
 		"AuxRuntime":          "Tillskottstimmar",
 		"WarmWaterRuntime":    "Varmvattentimmar",
 		"PowerConsumption":    "Effekt",
+		"HeatCarrierReturn":   "Returledning intern",
+		"HighPressostat":      "Pressostat hög",
+		"LowPressostat":       "Pressostat låg",
+		"HeatingCable":        "Värmekabel",
+		"CrankCaseHeater":     "Vevhusvärmare",
+		"AirIntake":           "Luftintag",
+		"Fan":                 "Fläkt",
 	}
 
 	EnglishCatalog = map[string]string{
@@ -93,6 +100,13 @@ var (
 		"AuxRuntime":          "Aux runtime",
 		"WarmWaterRuntime":    "Hot water runtime",
 		"PowerConsumption":    "Power consumption",
+		"HeatCarrierReturn":   "Intern returledning",
+		"HighPressostat":      "High pressostat",
+		"LowPressostat":       "Low pressostat",
+		"HeatingCable":        "Heating cable",
+		"CrankCaseHeater":     "Crankcase heater",
+		"AirIntake":           "Air intake",
+		"Fan":                 "Fan",
 	}
 )
 
