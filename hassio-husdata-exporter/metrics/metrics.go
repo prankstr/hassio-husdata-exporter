@@ -97,7 +97,7 @@ func createGaugeIfNotNil(metricValue *int64, metricName string, labelKey string,
 			translatedLabelValue := localization.GetTranslation(lang, labelValue)
 			fullMetricName = fmt.Sprintf(`heatpump_%s{%s="%s"}`, metricName, labelKey, translatedLabelValue)
 		} else {
-			fullMetricName = metricName
+			fullMetricName = fmt.Sprintf(`heatpump_%s`, metricName)
 		}
 
 		metrics.GetOrCreateGauge(printer.Sprintf(fullMetricName), func() float64 {
@@ -116,7 +116,7 @@ func createCounterIfNotNil(metricValue *int64, metricName string, labelKey strin
 			translatedLabelValue := localization.GetTranslation(lang, labelValue)
 			fullMetricName = fmt.Sprintf(`heatpump_%s{%s="%s"}`, metricName, labelKey, translatedLabelValue)
 		} else {
-			fullMetricName = metricName
+			fullMetricName = fmt.Sprintf(`heatpump_%s`, metricName)
 		}
 
 		if applyDivision {
