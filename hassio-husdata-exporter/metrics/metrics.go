@@ -95,7 +95,7 @@ func createGaugeIfNotNil(metricValue *int64, metricName string, labelKey string,
 		var fullMetricName string
 		if labelKey != "" && labelValue != "" {
 			translatedLabelValue := localization.GetTranslation(lang, labelValue)
-			fullMetricName = fmt.Sprintf(`%s{%s="%s"}`, metricName, labelKey, translatedLabelValue)
+			fullMetricName = fmt.Sprintf(`heatpump_%s{%s="%s"}`, metricName, labelKey, translatedLabelValue)
 		} else {
 			fullMetricName = metricName
 		}
@@ -114,7 +114,7 @@ func createCounterIfNotNil(metricValue *int64, metricName string, labelKey strin
 		var fullMetricName string
 		if labelKey != "" && labelValue != "" {
 			translatedLabelValue := localization.GetTranslation(lang, labelValue)
-			fullMetricName = fmt.Sprintf(`%s{%s="%s"}`, metricName, labelKey, translatedLabelValue)
+			fullMetricName = fmt.Sprintf(`heatpump_%s{%s="%s"}`, metricName, labelKey, translatedLabelValue)
 		} else {
 			fullMetricName = metricName
 		}
