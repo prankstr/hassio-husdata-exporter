@@ -60,6 +60,7 @@ var (
 		"OperatingMode":       "Operating Mode",
 		"RoomSensorInfluence": "Room sensor influence",
 		"HeatSet1CurveL":      "Heat set 1, CurveL",
+		"HeatSet1CurveR":      "Heat set 1, CurveR",
 		"HeatSet3Parallel":    "Heat set 3, Parallel",
 		"HeatSet1CurveL2":     "Heat set 1, CurveL2",
 		"HeatSet3Parall2":     "Heat set 3, Parall2",

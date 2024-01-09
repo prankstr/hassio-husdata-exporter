@@ -72,8 +72,8 @@ func Update(vpdata *models.VPData, lang language.Tag) {
 	createGaugeIfNotNil(vpdata.HeatSet1CurveR, "settings_curve_slope", "supply", "HeatSet1CurveR", lang, p, true)
 	createGaugeIfNotNil(vpdata.HighPressostat, "unit_on", "unit", "HighPressostat", lang, p, false)
 	createGaugeIfNotNil(vpdata.LowPressostat, "unit_on", "unit", "LowPressostat", lang, p, false)
-	createGaugeIfNotNil(vpdata.HeatingCable, "unit_on", "", "HeatingCable", lang, p, false)
-	createGaugeIfNotNil(vpdata.CrankCaseHeater, "unit_on", "", "CrankCaseHeater", lang, p, false)
+	createGaugeIfNotNil(vpdata.HeatingCable, "unit_on", "unit", "HeatingCable", lang, p, false)
+	createGaugeIfNotNil(vpdata.CrankCaseHeater, "unit_on", "unit", "CrankCaseHeater", lang, p, false)
 	createGaugeIfNotNil(vpdata.AddHeatStatus, "sensor_add_heat_status", "sensor", "AddHeatStatus", lang, p, true)
 
 	// Conflicting Metrics Handling

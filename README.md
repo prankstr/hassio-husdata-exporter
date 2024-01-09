@@ -16,7 +16,7 @@ This has been developed towards a Husdata H66 and a Nibe heatpump with the Styr2
 
 ### Prerequisites
 - A running Home Assistant installation with add-on support
-- Heatpump with a Husdata H60 or H66 gateway connected
+- Heatpump with a Husdata H60 or H66 gateway connected and API enabled
 
 ### Steps
 1. **Add Repository to Home Assistant:**
