@@ -1,7 +1,10 @@
 # Changelog
 
 ## 1.1.0
-- Added a lot of metrics for EW pumps with the Rego 800 interface
+- Support EW pump metrics from the Rego800 interface
+- Added an icon and a logo that will be displayed in Home Assistant
+- Set a better side bar icon in Home Assistant
+- Minor documentation improvements
 
 ## 1.0.0
 - 🚀 Initial MVP release 🚀

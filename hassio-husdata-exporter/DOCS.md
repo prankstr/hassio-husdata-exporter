@@ -9,8 +9,12 @@ Configure the add-on through the Home Assistant UI with the following options:
 ## Usage
 Once the Husdata Exporter add-on is configured and running:
 - The exporter will start polling data from your Husdata gateway immediately.
-- For scraping within Home Assistant: Configure your monitoring tool to scrape metrics from `http://d5f5b367-husdata-exporter:8099/metrics`.
+- For scraping within Home Assistant: Configure your monitoring tool to scrape metrics from `http://36ccfd7d-husdata-exporter:8099/metrics`.
 - For external scraping: Enable the external server in settings and configure your tool to scrape from `http://<your-server-ip-or-hostname>:9101/metrics`.
+
+If the internal hostname isn't working - verify that it's correct by navigating to the add-on page and check the hostname. `Settings` -> `Add-ons` -> `Husdata Exporter`. Use the value underlined in red.
+![Add-on Hostname Preview](../images/hostname.png "Add-on Hostname")
+
 
 ## Available Metrics
 
