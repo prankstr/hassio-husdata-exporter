@@ -1,6 +1,7 @@
 package metrics
 
 import (
+	"fmt"
 	"husdata_exporter/localization"
 	"husdata_exporter/models"
 
@@ -9,165 +10,128 @@ import (
 	"golang.org/x/text/message"
 )
 
+// Constants
+const divisionFactor = 10
+
+// Update is called periodically to update metrics with new values
 func Update(vpdata *models.VPData, lang language.Tag) {
 	p := message.NewPrinter(lang)
 
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_sensor_temperature_celsius{sensor="%s"}`, localization.GetTranslation(lang, "RadiatorReturn")), func() float64 {
-		return float64(vpdata.RadiatorReturn) / 10
-	})
+	// Common Metrics
+	createGaugeIfNotNil(vpdata.RadiatorReturn, "sensor_temperature_celsius", "sensor", "Radiator Return", lang, p, true)
+	createGaugeIfNotNil(vpdata.HeatCarrierForward, "sensor_temperature_celsius", "sensor", "Heat Carrier Forward", lang, p, true)
+	createGaugeIfNotNil(vpdata.BrineInCondensor, "sensor_temperature_celsius", "sensor", "Brine In / Condensor", lang, p, true)
+	createGaugeIfNotNil(vpdata.BrineOutEvaporator, "sensor_temperature_celsius", "sensor", "Brine Out / Evaporator", lang, p, true)
+	createGaugeIfNotNil(vpdata.Outdoor, "sensor_temperature_celsius", "sensor", "Outdoor", lang, p, true)
+	createGaugeIfNotNil(vpdata.Indoor, "sensor_temperature_celsius", "sensor", "Indoor", lang, p, true)
+	createGaugeIfNotNil(vpdata.WarmWaterTop, "sensor_temperature_celsius", "sensor", "Hot Water Top", lang, p, true)
+	createGaugeIfNotNil(vpdata.HotGas, "sensor_temperature_celsius", "sensor", "Hot Gas", lang, p, true)
+	createGaugeIfNotNil(vpdata.Pool, "sensor_temperature_celsius", "sensor", "Pool", lang, p, true)
+	createGaugeIfNotNil(vpdata.HeatingSetpoint, "heating_set_point_celsius", "", "", lang, p, true)
+	createGaugeIfNotNil(vpdata.RoomTempSetpoint, "settings_room_temperature_celsius", "", "", lang, p, true)
+	createGaugeIfNotNil(vpdata.WarmWaterStopTemp, "settings_hot_water_stop_temperature_celsius", "", "", lang, p, true)
+	createGaugeIfNotNil(vpdata.WarmWaterStartTemp, "settings_hot_water_start_temperature_celsius", "", "", lang, p, true)
+	createGaugeIfNotNil(vpdata.Compressor, "unit_on", "unit", "Compressor", lang, p, false)
+	createGaugeIfNotNil(vpdata.PumpHeatCircuit, "unit_on", "unit", "Pump Heat Circuit", lang, p, false)
+	createGaugeIfNotNil(vpdata.PumpRadiator, "unit_on", "unit", "Pump Radiator", lang, p, false)
+	createGaugeIfNotNil(vpdata.SwitchValve1, "unit_on", "unit", "Switch Valve 1", lang, p, false)
+	createGaugeIfNotNil(vpdata.SwitchValve2, "unit_on", "unit", "Switch Valve 2", lang, p, false)
+	createGaugeIfNotNil(vpdata.RoomSensorInfluence, "settings_room_compensation", "", "", lang, p, true)
+	createGaugeIfNotNil(vpdata.PowerConsumption, "sensor_power_watt", "", "", lang, p, false)
 
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_sensor_temperature_celsius{sensor="%s"}`, localization.GetTranslation(lang, "RadiatorReturn2")), func() float64 {
-		return float64(vpdata.RadiatorReturn2) / 10
-	})
+	// LW Specific Metrics
+	createGaugeIfNotNil(vpdata.WarmWaterMid, "sensor_temperature_celsius", "sensor", "Hot Water Mid", lang, p, true)
+	createGaugeIfNotNil(vpdata.PumpColdCircuit, "unit_on", "unit", "Pump Cold Circuit", lang, p, false)
 
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_sensor_temperature_celsius{sensor="%s"}`, localization.GetTranslation(lang, "HeatCarrierForward")), func() float64 {
-		return float64(vpdata.HeatCarrierForward) / 10
-	})
+	// AW Specific Metrics
+	createGaugeIfNotNil(vpdata.AirIntake, "sensor_temperature_celsius", "sensor", "Air Intake", lang, p, true)
+	createGaugeIfNotNil(vpdata.Fan, "unit_on", "unit", "Fan", lang, p, false)
 
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_sensor_temperature_celsius{sensor="%s"}`, localization.GetTranslation(lang, "BrineInCondensor")), func() float64 {
-		return float64(vpdata.BrineInCondensor) / 10
-	})
+	// Styr2002 Specific Metrics
+	createGaugeIfNotNil(vpdata.SuctionGas, "sensor_temperature_celsius", "sensor", "Suction Gas", lang, p, true)
+	createGaugeIfNotNil(vpdata.LiquidFlow, "sensor_temperature_celsius", "sensor", "Liquid Flow", lang, p, true)
+	createGaugeIfNotNil(vpdata.RadiatorForward2, "sensor_temperature_celsius", "sensor", "Radiator Forward 2", lang, p, true)
+	createGaugeIfNotNil(vpdata.RadiatorReturn2, "sensor_temperature_celsius", "sensor", "Radiator Return 2", lang, p, true)
+	createGaugeIfNotNil(vpdata.AddHeatStep1, "unit_on", "unit", "Add Heat Step 1", lang, p, false)
+	createGaugeIfNotNil(vpdata.AddHeatStep2, "unit_on", "unit", "Add Heat Step 2", lang, p, false)
+	createGaugeIfNotNil(vpdata.OperatingMode, "settings_mode", "", "", lang, p, true)
+	createGaugeIfNotNil(vpdata.AlarmReset, "settings_alarm_reset", "", "", lang, p, false)
+	createGaugeIfNotNil(vpdata.LoadL1, "sensor_current_ampere", "sensor", "L1", lang, p, true)
+	createGaugeIfNotNil(vpdata.LoadL2, "sensor_current_ampere", "sensor", "L2", lang, p, true)
+	createGaugeIfNotNil(vpdata.LoadL3, "sensor_current_ampere", "sensor", "L3", lang, p, true)
+	createGaugeIfNotNil(vpdata.HeatSet3Parallel, "settings_curve_offset", "supply", "Heat Set 3 Parallel", lang, p, true)
+	createGaugeIfNotNil(vpdata.HeatSet1CurveL2, "settings_curve_slope", "supply", "Heat Set 1 CurveL 2", lang, p, true)
+	createGaugeIfNotNil(vpdata.HeatSet3Parall2, "settings_curve_offset", "supply", "Heat Set 3 Parallel 2", lang, p, true)
+	createGaugeIfNotNil(vpdata.DegreeMinIntegral, "degree_minutes_celsius", "", "", lang, p, true)
 
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_sensor_temperature_celsius{sensor="%s"}`, localization.GetTranslation(lang, "BrineOutEvaporator")), func() float64 {
-		return float64(vpdata.BrineOutEvaporator) / 10
-	})
+	// Handling Counters
+	createCounterIfNotNil(vpdata.CompressorStarts, "unit_starts_total", "unit", "Compressor", lang, p, true)
+	createCounterIfNotNil(vpdata.CompressorRuntime, "unit_runtime_seconds_total", "unit", "Compressor", lang, p, true)
+	createCounterIfNotNil(vpdata.AuxRuntime, "unit_runtime_seconds_total", "unit", "Add Heat", lang, p, true)
+	createCounterIfNotNil(vpdata.WarmWaterRuntime, "unit_runtime_seconds_total", "unit", "Hot Water", lang, p, true)
 
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_sensor_temperature_celsius{sensor="%s"}`, localization.GetTranslation(lang, "Outdoor")), func() float64 {
-		return float64(vpdata.Outdoor) / 10
-	})
+	// Rego Specific Metrics
+	createGaugeIfNotNil(vpdata.HeatCarrierReturn, "sensor_temperature_celsius", "sensor", "Heat Carrier Return", lang, p, true)
+	createGaugeIfNotNil(vpdata.HeatSet1CurveR, "settings_curve_slope", "supply", "Heat Set 1 CurveR", lang, p, true)
+	createGaugeIfNotNil(vpdata.HighPressostat, "unit_on", "unit", "High Pressostat", lang, p, false)
+	createGaugeIfNotNil(vpdata.LowPressostat, "unit_on", "unit", "Low Pressostat", lang, p, false)
+	createGaugeIfNotNil(vpdata.HeatingCable, "unit_on", "unit", "Heating Cable", lang, p, false)
+	createGaugeIfNotNil(vpdata.CrankCaseHeater, "unit_on", "unit", "Crank Case Heater", lang, p, false)
+	createGaugeIfNotNil(vpdata.AddHeatStatus, "sensor_add_heat_percent", "", "", lang, p, true)
+	createCounterIfNotNil(vpdata.OutdoorTempOffset, "settings_outdoor_temperature_offset_celsius", "", "", lang, p, true)
 
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_sensor_temperature_celsius{sensor="%s"}`, localization.GetTranslation(lang, "Indoor")), func() float64 {
-		return float64(vpdata.Indoor) / 10
-	})
+	// Conflicting Metrics Handling
+	if vpdata.Alarm != nil {
+		createGaugeIfNotNil(vpdata.Alarm, "alarm", "", "", lang, p, false)
+	} else if vpdata.RegoAlarm != nil {
+		createGaugeIfNotNil(vpdata.RegoAlarm, "alarm", "", "", lang, p, false)
+	}
 
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_sensor_temperature_celsius{sensor="%s"}`, localization.GetTranslation(lang, "WarmWaterTop")), func() float64 {
-		return float64(vpdata.WarmWaterTop) / 10
-	})
+	if vpdata.HeatSet1CurveL != nil {
+		createGaugeIfNotNil(vpdata.HeatSet1CurveL, "settings_curve_slope", "supply", "Heat Set 1 CurveL", lang, p, true)
+	} else if vpdata.RegoHeatSet1CurveL != nil {
+		createGaugeIfNotNil(vpdata.RegoHeatSet1CurveL, "settings_curve_slope", "supply", "Heat Set 1 CurveL", lang, p, true)
+	}
 
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_sensor_temperature_celsius{sensor="%s"}`, localization.GetTranslation(lang, "WarmWaterMid")), func() float64 {
-		return float64(vpdata.WarmWaterMid) / 10
-	})
+}
 
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_sensor_temperature_celsius{sensor="%s"}`, localization.GetTranslation(lang, "HotGas")), func() float64 {
-		return float64(vpdata.HotGas) / 10
-	})
+// createMetricName creates a formatted metric name based on provided parameters
+func createMetricName(metricName, labelKey, labelValue string, lang language.Tag, printer *message.Printer) string {
+	if labelKey != "" && labelValue != "" {
+		var translatedLabelValue string
+		if lang != language.English {
+			translatedLabelValue = localization.GetTranslation(lang, labelValue)
+		} else {
+			translatedLabelValue = labelValue
+		}
+		return fmt.Sprintf(`heatpump_%s{%s="%s"}`, metricName, labelKey, translatedLabelValue)
+	}
+	return fmt.Sprintf(`heatpump_%s`, metricName)
+}
 
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_sensor_temperature_celsius{sensor="%s"}`, localization.GetTranslation(lang, "SuctionGas")), func() float64 {
-		return float64(vpdata.SuctionGas) / 10
-	})
+// createGaugeIfNotNil creates a gauge if the metric was provided from the husdata gateway
+func createGaugeIfNotNil(metricValue *int64, metricName, labelKey, labelValue string, lang language.Tag, printer *message.Printer, applyDivision bool) {
+	if metricValue != nil {
+		fullMetricName := createMetricName(metricName, labelKey, labelValue, lang, printer)
 
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_sensor_temperature_celsius{sensor="%s"}`, localization.GetTranslation(lang, "LiquidFlow")), func() float64 {
-		return float64(vpdata.LiquidFlow) / 10
-	})
+		metrics.GetOrCreateGauge(printer.Sprintf(fullMetricName), func() float64 {
+			if applyDivision {
+				return float64(*metricValue) / divisionFactor
+			}
+			return float64(*metricValue)
+		})
+	}
+}
 
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_sensor_temperature_celsius{sensor="%s"}`, localization.GetTranslation(lang, "Pool")), func() float64 {
-		return float64(vpdata.Pool) / 10
-	})
+// createCounterIfNotNil creates a counter if the metric was provided from the husdata gateway
+func createCounterIfNotNil(metricValue *int64, metricName, labelKey, labelValue string, lang language.Tag, printer *message.Printer, applyDivision bool) {
+	if metricValue != nil {
+		fullMetricName := createMetricName(metricName, labelKey, labelValue, lang, printer)
 
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_sensor_temperature_celsius{sensor="%s"}`, localization.GetTranslation(lang, "RadiatorForward2")), func() float64 {
-		return float64(vpdata.RadiatorForward2) / 10
-	})
-
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_sensor_current_ampere{sensor="%s"}`, localization.GetTranslation(lang, "LoadL1")), func() float64 {
-		return float64(vpdata.LoadL1) / 10
-	})
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_sensor_current_ampere{sensor="%s"}`, localization.GetTranslation(lang, "LoadL2")), func() float64 {
-		return float64(vpdata.LoadL2) / 10
-	})
-
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_sensor_current_ampere{sensor="%s"}`, localization.GetTranslation(lang, "LoadL3")), func() float64 {
-		return float64(vpdata.LoadL3) / 10
-	})
-
-	metrics.GetOrCreateCounter(p.Sprintf(`heatpump_unit_starts_total{unit="%s"}`, localization.GetTranslation(lang, "CompressorStarts"))).Set(uint64(vpdata.CompressorStarts / 10))
-
-	metrics.GetOrCreateCounter(p.Sprintf(`heatpump_unit_runtime_seconds_total{unit="%s"}`, localization.GetTranslation(lang, "CompressorRuntime"))).Set(uint64(vpdata.CompressorRuntime * 3600 / 10))
-
-	metrics.GetOrCreateCounter(p.Sprintf(`heatpump_unit_runtime_seconds_total{unit="%s"}`, localization.GetTranslation(lang, "WarmWaterRuntime"))).Set(uint64(vpdata.WarmWaterRuntime * 3600 / 10))
-
-	metrics.GetOrCreateCounter(p.Sprintf(`heatpump_unit_runtime_seconds_total{unit="%s"}`, localization.GetTranslation(lang, "AuxRuntime"))).Set(uint64(vpdata.AuxRuntime * 3600 / 10))
-
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_unit_on{unit="%s"}`, localization.GetTranslation(lang, "Compressor")), func() float64 {
-		return float64(vpdata.Compressor)
-	})
-
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_unit_on{unit="%s"}`, localization.GetTranslation(lang, "AddHeatStep1")), func() float64 {
-		return float64(vpdata.AddHeatStep1)
-	})
-
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_unit_on{unit="%s"}`, localization.GetTranslation(lang, "AddHeatStep2")), func() float64 {
-		return float64(vpdata.AddHeatStep2)
-	})
-
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_unit_on{unit="%s"}`, localization.GetTranslation(lang, "PumpHeatCircuit")), func() float64 {
-		return float64(vpdata.PumpHeatCircuit)
-	})
-
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_unit_on{unit="%s"}`, localization.GetTranslation(lang, "PumpColdCircuit")), func() float64 {
-		return float64(vpdata.PumpColdCircuit)
-	})
-
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_unit_on{unit="%s"}`, localization.GetTranslation(lang, "PumpRadiator")), func() float64 {
-		return float64(vpdata.PumpRadiator)
-	})
-
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_unit_on{unit="%s"}`, localization.GetTranslation(lang, "SwitchValve1")), func() float64 {
-		return float64(vpdata.SwitchValve1)
-	})
-
-	metrics.GetOrCreateGauge(`heatpump_settings_hot_water_start_temperature_celsius`, func() float64 {
-		return float64(vpdata.WarmWaterStartTemp) / 10
-	})
-
-	metrics.GetOrCreateGauge(`heatpump_settings_hot_water_stop_temperature_celsius`, func() float64 {
-		return float64(vpdata.WarmWaterStopTemp) / 10
-	})
-
-	metrics.GetOrCreateGauge(`heatpump_settings_room_compensation`, func() float64 {
-		return float64(vpdata.RoomSensorInfluence) / 10
-	})
-
-	metrics.GetOrCreateGauge(`heatpump_settings_room_temp`, func() float64 {
-		return float64(vpdata.RoomTempSetpoint) / 10
-	})
-
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_settings_curve_slope{supply="%s"}`, localization.GetTranslation(lang, "HeatSet1CurveL")), func() float64 {
-		return float64(vpdata.HeatSet1CurveL) / 10
-	})
-
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_settings_curve_slope{supply="%s"}`, localization.GetTranslation(lang, "HeatSet1CurveL2")), func() float64 {
-		return float64(vpdata.HeatSet1CurveL2) / 10
-	})
-
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_settings_curve_offset{supply="%s"}`, localization.GetTranslation(lang, "HeatSet3Parallel")), func() float64 {
-		return float64(vpdata.HeatSet3Parallel) / 10
-	})
-
-	metrics.GetOrCreateGauge(p.Sprintf(`heatpump_settings_curve_offset{supply="%s"}`, localization.GetTranslation(lang, "HeatSet3Parall2")), func() float64 {
-		return float64(vpdata.HeatSet3Parall2) / 10
-	})
-
-	metrics.GetOrCreateGauge(`heatpump_degree_minutes_celsius`, func() float64 {
-		return float64(vpdata.DegreeMinIntegral) / 10
-	})
-
-	metrics.GetOrCreateGauge(`heatpump_heating_set_point`, func() float64 {
-		return float64(vpdata.HeatingSetpoint) / 10
-	})
-
-	metrics.GetOrCreateGauge(`heatpump_mode`, func() float64 {
-		return float64(vpdata.OperatingMode) / 10
-	})
-
-	metrics.GetOrCreateGauge(`heatpump_alarm`, func() float64 {
-		return float64(vpdata.Alarm)
-	})
-
-	metrics.GetOrCreateGauge(`heatpump_alarm_reset`, func() float64 {
-		return float64(vpdata.AlarmReset)
-	})
-
-	metrics.GetOrCreateGauge(`heatpump_sensor_power_watt`, func() float64 {
-		return float64(vpdata.PowerConsumption)
-	})
+		if applyDivision {
+			metrics.GetOrCreateCounter(printer.Sprintf(fullMetricName)).Set(uint64(*metricValue / divisionFactor))
+		} else {
+			metrics.GetOrCreateCounter(printer.Sprintf(fullMetricName)).Set(uint64(*metricValue))
+		}
+	}
 }
