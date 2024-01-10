@@ -75,6 +75,7 @@ func Update(vpdata *models.VPData, lang language.Tag) {
 	createGaugeIfNotNil(vpdata.HeatingCable, "unit_on", "unit", "HeatingCable", lang, p, false)
 	createGaugeIfNotNil(vpdata.CrankCaseHeater, "unit_on", "unit", "CrankCaseHeater", lang, p, false)
 	createGaugeIfNotNil(vpdata.AddHeatStatus, "sensor_add_heat_status", "sensor", "AddHeatStatus", lang, p, true)
+	createCounterIfNotNil(vpdata.OutdoorTempOffset, "settings_outdoor_temp_offset", "", "", lang, p, true)
 
 	// Conflicting Metrics Handling
 	if vpdata.Alarm != nil {

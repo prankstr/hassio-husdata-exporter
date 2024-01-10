@@ -27,9 +27,13 @@ Once the Husdata Exporter add-on is configured and running:
 | `000B`    | `heatpump_sensor_temperature_celsius`             | Hetgas                   | Hot Gas                  |
 | `000C`    | `heatpump_sensor_temperature_celsius`             | Suggas                   | Suction Gas              |
 | `000D`    | `heatpump_sensor_temperature_celsius`             | Vätskeledning            | Liquid Flow              |
+| `000E`    | `heatpump_sensor_temperature_celsius`             | Luftintag                | Air Intake               |
 | `0011`    | `heatpump_sensor_temperature_celsius`             | Pool                     | Pool                     |
 | `0020`    | `heatpump_sensor_temperature_celsius`             | Framledning 2            | Radiator Forward 2       |
 | `0022`    | `heatpump_sensor_temperature_celsius`             | Returledning 2           | Radiator Return 2        |
+| `1A09`    | `heatpump_unit_on`                                | Fläkt                    | Fan                      |
+| `1A0A`    | `heatpump_unit_on`                                | Högt tryck               | High Pressostat          |
+| `1A0B`    | `heatpump_unit_on`                                | Lågt tryck               | Low Pressostat           |
 | `4101`    | `heatpump_sensor_current_ampere`                  | Ström L1                 | Load L1                  |
 | `4102`    | `heatpump_sensor_current_ampere`                  | Ström L2                 | Load L2                  |
 | `4103`    | `heatpump_sensor_current_ampere`                  | Ström L3                 | Load L3                  |
@@ -58,6 +62,10 @@ Once the Husdata Exporter add-on is configured and running:
 | `2A20`    | `heatpump_alarm`                                  | Alarm                    | Alarm                    |
 | `22F2`    | `heatpump_alarm_reset`                            | Alarm Reset              | Alarm Reset              |
 | `CFAA`    | `heatpump_sensor_power_watt`                      | Effekt                   | Power Consumption        |
+| `1A0C`    | `heatpump_unit_on`                                | Värmekabel               | Heating Cable            |
+| `1A0D`    | `heatpump_unit_on`                                | Vevhusvärmare            | Crank Case Heater        |
+| `3104`    | `heatpump_sensor_add_heat_status`                 | Tillskottsstatus         | Add Heat Status          |
+| `0217`    | `heatpump_settings_outdoor_temp_offset`           | Ute Temp Offset          | Outdoor Temp Offset      |
 
 ## Dashboard
 

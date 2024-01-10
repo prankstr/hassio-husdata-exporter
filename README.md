@@ -1,16 +1,16 @@
 # Husdata Prometheus Exporter for Home Assistant
 
 ## Overview
-Husdata Prometheus Exporter is a Home Assistant add-on designed to integrate with Husdata gateways. It polls and exports data from Husdata gateways(H60/H66), providing the Husdata heatpump metrics in a format compatible with Prometheus enhancing your ability to monitor and analyze the performance of your heat pump. 
+Husdata Prometheus Exporter is a Home Assistant add-on that integrates with Husdata gateways(H60/H66). It polls and exports data from these Husdata gateways, presenting Husdata heat pump metrics in a format that is fully compatible with Prometheus, enhancing your ability to monitor and analyze your heat pump's performance effectively.
 
-This has been developed towards a Husdata H66 and a Nibe heatpump with the Styr2002 interface but a lot of the metrics should work for other heat pumps as well, I'm not sure what works and what doesn't though.
+This add-on has been developed primarily for the Husdata H66 and Nibe ground source heat pumps equipped with the Styr2002 interface as well as the Bosch EHP AW pumps with the Rego800 interface. It offers mostly complete metrics coverage for these specific models, as supported by Husdata. While a lot of the metrics should work for other heat pumps as well the compatibility and functionality may vary.
 
 ## Features
 - Periodic polling of data from Husdata gateways.
 - Exports Husdata metrics in a prometheus format for easy integration and monitoring.
 - Customizable polling intervals.
 - Supports Swedish and English label values for sensors etc(see below).
-- Supports Home Assistant Ingress and an external server for direct access.
+- Supports Home Assistant Ingress and a toggleable external server for direct access.
 
 ## Installation
 
@@ -59,9 +59,13 @@ Once the Husdata Exporter add-on is configured and running:
 | `000B`    | `heatpump_sensor_temperature_celsius`             | Hetgas                   | Hot Gas                  |
 | `000C`    | `heatpump_sensor_temperature_celsius`             | Suggas                   | Suction Gas              |
 | `000D`    | `heatpump_sensor_temperature_celsius`             | Vätskeledning            | Liquid Flow              |
+| `000E`    | `heatpump_sensor_temperature_celsius`             | Luftintag                | Air Intake               |
 | `0011`    | `heatpump_sensor_temperature_celsius`             | Pool                     | Pool                     |
 | `0020`    | `heatpump_sensor_temperature_celsius`             | Framledning 2            | Radiator Forward 2       |
 | `0022`    | `heatpump_sensor_temperature_celsius`             | Returledning 2           | Radiator Return 2        |
+| `1A09`    | `heatpump_unit_on`                                | Fläkt                    | Fan                      |
+| `1A0A`    | `heatpump_unit_on`                                | Högt tryck               | High Pressostat          |
+| `1A0B`    | `heatpump_unit_on`                                | Lågt tryck               | Low Pressostat           |
 | `4101`    | `heatpump_sensor_current_ampere`                  | Ström L1                 | Load L1                  |
 | `4102`    | `heatpump_sensor_current_ampere`                  | Ström L2                 | Load L2                  |
 | `4103`    | `heatpump_sensor_current_ampere`                  | Ström L3                 | Load L3                  |
@@ -90,6 +94,10 @@ Once the Husdata Exporter add-on is configured and running:
 | `2A20`    | `heatpump_alarm`                                  | Alarm                    | Alarm                    |
 | `22F2`    | `heatpump_alarm_reset`                            | Alarm Reset              | Alarm Reset              |
 | `CFAA`    | `heatpump_sensor_power_watt`                      | Effekt                   | Power Consumption        |
+| `1A0C`    | `heatpump_unit_on`                                | Värmekabel               | Heating Cable            |
+| `1A0D`    | `heatpump_unit_on`                                | Vevhusvärmare            | Crank Case Heater        |
+| `3104`    | `heatpump_sensor_add_heat_status`                 | Tillskottsstatus         | Add Heat Status          |
+| `0217`    | `heatpump_settings_outdoor_temp_offset`           | Ute Temp Offset          | Outdoor Temp Offset      |
 
 ## Dashboard
 
